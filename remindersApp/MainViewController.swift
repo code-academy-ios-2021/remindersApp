@@ -61,11 +61,17 @@ final class MainViewController: UIViewController {
     private lazy var myListsTableView: UITableView = {
         let tableView = UITableView(frame: view.frame)
         tableView.separatorStyle = .none
-        tableView.tableFooterView = UIView()
         tableView.backgroundColor = .systemGray6
         tableView.dataSource = self
         tableView.register(MyListsCell.self, forCellReuseIdentifier: "MyListsCell")
 
+        tableView.layer.cornerRadius = 8
+        tableView.layer.maskedCorners = [
+            .layerMinXMaxYCorner,
+            .layerMaxXMaxYCorner,
+            .layerMinXMinYCorner,
+            .layerMaxXMinYCorner
+        ]
         return tableView
     }()
 
@@ -73,11 +79,7 @@ final class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavigationBar()
-        configureSearchBar()
-        configureCollectionView()
-        configureMyListsLabel()
-        configureMyListsTableView()
+        configureView()
         applyTheming()
     }
 }
@@ -90,6 +92,15 @@ private extension MainViewController {
         view.backgroundColor = .systemGray6
     }
 
+    func configureView() {
+        configureNavigationBar()
+        view.addSubview(searchBar)
+        view.addSubview(remindersTypeCollectionView)
+        view.addSubview(myListsLabel)
+        view.addSubview(myListsTableView)
+        setupConstraints()
+    }
+
     func configureNavigationBar() {
         guard let navigationController = navigationController else { return }
 
@@ -99,19 +110,13 @@ private extension MainViewController {
         navigationItem.rightBarButtonItem = editButton
     }
 
-    func configureSearchBar() {
-        view.addSubview(searchBar)
-
+    func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalTo(view).offset(EdgeMargin)
             make.trailing.equalTo(view).inset(EdgeMargin)
             make.height.equalTo(SearchBarHeight)
         }
-    }
-
-    func configureCollectionView() {
-        view.addSubview(remindersTypeCollectionView)
 
         remindersTypeCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(EdgeMargin)
@@ -119,26 +124,18 @@ private extension MainViewController {
             make.leading.equalTo(searchBar)
             make.trailing.equalTo(searchBar)
         }
-    }
-
-    func configureMyListsLabel() {
-        view.addSubview(myListsLabel)
 
         myListsLabel.snp.makeConstraints { make in
             make.leading.equalTo(searchBar)
             make.trailing.equalTo(searchBar)
             make.top.equalTo(remindersTypeCollectionView.snp.bottom).offset(EdgeMargin)
         }
-    }
-
-    func configureMyListsTableView() {
-        view.addSubview(myListsTableView)
 
         myListsTableView.snp.makeConstraints { make in
             make.leading.equalTo(remindersTypeCollectionView)
             make.trailing.equalTo(remindersTypeCollectionView)
             make.top.equalTo(myListsLabel.snp.bottom).offset(EdgeMargin)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(50)
         }
     }
 }
@@ -172,13 +169,6 @@ extension MainViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MyListsCell", for: indexPath)
-
-        guard let myListsCell = cell as? MyListsCell else {
-            return cell
-        }
-
-        myListsCell.configureCell(text: "Reminders")
-        return myListsCell
+        tableView.dequeueReusableCell(withIdentifier: "MyListsCell", for: indexPath)
     }
 }
