@@ -52,6 +52,13 @@ final class MainViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var myListsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "My lists"
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        return label
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -59,6 +66,7 @@ final class MainViewController: UIViewController {
         configureNavigationBar()
         configureSearchBar()
         configureCollectionView()
+        configureMyListsLabel()
         applyTheming()
     }
 }
@@ -96,9 +104,19 @@ private extension MainViewController {
 
         remindersTypeCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(EdgeMargin)
-            make.bottom.equalTo(view)
+            make.height.equalTo((2 * CollectionViewCellHeight) + EdgeMargin)
             make.leading.equalTo(searchBar)
             make.trailing.equalTo(searchBar)
+        }
+    }
+
+    func configureMyListsLabel() {
+        view.addSubview(myListsLabel)
+
+        myListsLabel.snp.makeConstraints { make in
+            make.leading.equalTo(searchBar)
+            make.trailing.equalTo(searchBar)
+            make.top.equalTo(remindersTypeCollectionView.snp.bottom).offset(EdgeMargin)
         }
     }
 }
