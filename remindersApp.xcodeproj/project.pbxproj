@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		322F77782625F1CB0050853A /* MyListsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322F77772625F1CB0050853A /* MyListsCell.swift */; };
 		323310D62624AA43005BA3C2 /* ReminderTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 323310D52624AA43005BA3C2 /* ReminderTypeCell.swift */; };
 		3293A1E126249B1F004DABDE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3293A1E026249B1F004DABDE /* AppDelegate.swift */; };
 		3293A1E326249B1F004DABDE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3293A1E226249B1F004DABDE /* SceneDelegate.swift */; };
@@ -19,6 +20,7 @@
 
 /* Begin PBXFileReference section */
 		1B17A2A30F5E6755901623EB /* Pods-remindersApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-remindersApp.debug.xcconfig"; path = "Target Support Files/Pods-remindersApp/Pods-remindersApp.debug.xcconfig"; sourceTree = "<group>"; };
+		322F77772625F1CB0050853A /* MyListsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListsCell.swift; sourceTree = "<group>"; };
 		323310D52624AA43005BA3C2 /* ReminderTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderTypeCell.swift; sourceTree = "<group>"; };
 		3293A1DD26249B1F004DABDE /* remindersApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = remindersApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3293A1E026249B1F004DABDE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				323310D52624AA43005BA3C2 /* ReminderTypeCell.swift */,
+				322F77772625F1CB0050853A /* MyListsCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 			files = (
 				3293A1F726249B36004DABDE /* MainViewController.swift in Sources */,
 				323310D62624AA43005BA3C2 /* ReminderTypeCell.swift in Sources */,
+				322F77782625F1CB0050853A /* MyListsCell.swift in Sources */,
 				3293A1E126249B1F004DABDE /* AppDelegate.swift in Sources */,
 				3293A1E326249B1F004DABDE /* SceneDelegate.swift in Sources */,
 			);

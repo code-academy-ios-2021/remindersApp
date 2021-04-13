@@ -45,7 +45,6 @@ final class MainViewController: UIViewController {
 
         let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: collectionViewLayout)
         collectionView.dataSource = self
-        collectionView.delegate = self
         collectionView.register(ReminderTypeCell.self, forCellWithReuseIdentifier: "ReminderTypeCell")
         collectionView.backgroundColor = .systemGray6
 
@@ -59,6 +58,17 @@ final class MainViewController: UIViewController {
         return label
     }()
 
+    private lazy var myListsTableView: UITableView = {
+        let tableView = UITableView(frame: view.frame)
+        tableView.separatorStyle = .none
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .systemGray6
+        tableView.dataSource = self
+        tableView.register(MyListsCell.self, forCellReuseIdentifier: "MyListsCell")
+
+        return tableView
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -67,6 +77,7 @@ final class MainViewController: UIViewController {
         configureSearchBar()
         configureCollectionView()
         configureMyListsLabel()
+        configureMyListsTableView()
         applyTheming()
     }
 }
@@ -119,6 +130,17 @@ private extension MainViewController {
             make.top.equalTo(remindersTypeCollectionView.snp.bottom).offset(EdgeMargin)
         }
     }
+
+    func configureMyListsTableView() {
+        view.addSubview(myListsTableView)
+
+        myListsTableView.snp.makeConstraints { make in
+            make.leading.equalTo(remindersTypeCollectionView)
+            make.trailing.equalTo(remindersTypeCollectionView)
+            make.top.equalTo(myListsLabel.snp.bottom).offset(EdgeMargin)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
 }
 
 // MARK: - UICollectionViewDataSource methods
@@ -141,9 +163,22 @@ extension MainViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - UICollectionViewDelegateFlowLayout methods
+// MARK: - UITableViewDataSource methods
 
-extension MainViewController: UICollectionViewDelegateFlowLayout {
+extension MainViewController: UITableViewDataSource {
 
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        1
+    }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MyListsCell", for: indexPath)
+
+        guard let myListsCell = cell as? MyListsCell else {
+            return cell
+        }
+
+        myListsCell.configureCell(text: "Reminders")
+        return myListsCell
+    }
 }
