@@ -60,8 +60,6 @@ final class MyListsCell: UITableViewCell {
 
     private func setupConstraints() {
         iconContainerView.snp.makeConstraints { make in
-//            make.top.equalTo(contentView).offset(10)
-//            make.bottom.equalTo(contentView).inset(10)
             make.leading.equalTo(contentView).offset(10)
             make.height.width.equalTo(30)
             make.centerY.equalTo(contentView)
