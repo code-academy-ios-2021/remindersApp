@@ -63,6 +63,7 @@ final class MainViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.backgroundColor = .systemGray6
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.register(MyListsCell.self, forCellReuseIdentifier: "MyListsCell")
 
         tableView.layer.cornerRadius = 8
@@ -135,7 +136,7 @@ private extension MainViewController {
             make.leading.equalTo(remindersTypeCollectionView)
             make.trailing.equalTo(remindersTypeCollectionView)
             make.top.equalTo(myListsLabel.snp.bottom).offset(EdgeMargin)
-            make.height.equalTo(50)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
@@ -170,5 +171,16 @@ extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView.dequeueReusableCell(withIdentifier: "MyListsCell", for: indexPath)
+    }
+}
+
+extension MainViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        // For performance reasons
+        return 50
     }
 }
