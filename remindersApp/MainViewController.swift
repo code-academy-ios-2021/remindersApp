@@ -75,6 +75,8 @@ final class MainViewController: UIViewController {
         ]
         return tableView
     }()
+    
+    private let bottomView = ActionsBottomView()
 
     // MARK: - Lifecycle
 
@@ -99,6 +101,8 @@ private extension MainViewController {
         view.addSubview(remindersTypeCollectionView)
         view.addSubview(myListsLabel)
         view.addSubview(myListsTableView)
+        view.addSubview(bottomView)
+        
         setupConstraints()
     }
 
@@ -136,6 +140,12 @@ private extension MainViewController {
             make.leading.equalTo(remindersTypeCollectionView)
             make.trailing.equalTo(remindersTypeCollectionView)
             make.top.equalTo(myListsLabel.snp.bottom).offset(EdgeMargin)
+            make.bottom.equalTo(bottomView.snp.top)
+        }
+        
+        bottomView.snp.makeConstraints { make in
+            make.leading.equalTo(view)
+            make.trailing.equalTo(view)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
@@ -166,7 +176,7 @@ extension MainViewController: UICollectionViewDataSource {
 extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        3
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
