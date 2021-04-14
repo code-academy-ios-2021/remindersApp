@@ -15,8 +15,8 @@ final class MyListsCell: UITableViewCell {
 
     private lazy var iconContainerView = UIView()
     private lazy var iconView = UIImageView()
-    private lazy var listNameLabel = configuredLabel(text: "Reminders", color: .black)
-    private lazy var countLabel = configuredLabel(text: "1", color: .placeholderText)
+    private lazy var listNameLabel = configuredLabel(text: "Reminders Reminders Reminders Reminders Reminders", color: .black)
+    private lazy var countLabel = configuredLabel(text: "100000000000", color: .placeholderText)
 
     private func configuredLabel(text: String, color: UIColor) -> UILabel {
         let label = UILabel()
@@ -73,11 +73,15 @@ final class MyListsCell: UITableViewCell {
             make.leading.equalTo(iconContainerView.snp.trailing).offset(10)
             make.centerY.equalTo(contentView)
         }
+        
+        listNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         countLabel.snp.makeConstraints { make in
             make.leading.greaterThanOrEqualTo(listNameLabel.snp.trailing).offset(10)
             make.trailing.equalTo(contentView).inset(10)
             make.centerY.equalTo(contentView)
         }
+        
+        countLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
     }
 }
