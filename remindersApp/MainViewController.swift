@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 final class MainViewController: UIViewController {
-
+    
     // MARK: - UI constants
 
     private let EdgeMargin: CGFloat = 20
@@ -60,12 +60,12 @@ final class MainViewController: UIViewController {
 
     private lazy var myListsTableView: UITableView = {
         let tableView = UITableView(frame: view.frame)
-        tableView.separatorStyle = .none
         tableView.backgroundColor = .systemGray6
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(MyListsCell.self, forCellReuseIdentifier: "MyListsCell")
 
+        // Table view needs to be adaptive height for corner radius to work
         tableView.layer.cornerRadius = 8
         tableView.layer.maskedCorners = [
             .layerMinXMaxYCorner,
@@ -82,8 +82,13 @@ final class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureView()
         applyTheming()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
     }
 }
 
@@ -93,6 +98,7 @@ private extension MainViewController {
 
     func applyTheming() {
         view.backgroundColor = .systemGray6
+        bottomView.isTransparent = !isTableViewBehindBottomView()
     }
 
     func configureView() {
@@ -140,7 +146,7 @@ private extension MainViewController {
             make.leading.equalTo(remindersTypeCollectionView)
             make.trailing.equalTo(remindersTypeCollectionView)
             make.top.equalTo(myListsLabel.snp.bottom).offset(EdgeMargin)
-            make.bottom.equalTo(bottomView.snp.top)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
         bottomView.snp.makeConstraints { make in
@@ -176,7 +182,7 @@ extension MainViewController: UICollectionViewDataSource {
 extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        2
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -192,5 +198,32 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         // For performance reasons
         return 50
+    }
+}
+
+// MARK: - Bottom View Transparency
+
+extension MainViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        bottomView.isTransparent = !isTableViewBehindBottomView()
+    }
+    
+    private func isTableViewBehindBottomView() -> Bool {
+        // 1. Gauti paskutinę table view cell
+        
+        guard let indexPath = myListsTableView.indexPathsForVisibleRows?.last else {
+            return false
+        }
+        
+        // 2. Sužinoti paskutinės table view cell poziciją
+        
+        // Gauname paskutinės cell poziciją table view
+        let cellFrameInTableView = myListsTableView.rectForRow(at: indexPath)
+        
+        // Gauname absoliučią cell poziciją visame main view
+        let cellFrameInMainView = myListsTableView.convert(cellFrameInTableView, to: view)
+                
+        // 3. Palyginti bottom view poziciją su table view cell pozicija
+        return bottomView.frame.intersects(cellFrameInMainView)
     }
 }

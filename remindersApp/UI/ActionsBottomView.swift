@@ -1,6 +1,10 @@
 import UIKit
 
 class ActionsBottomView: UIToolbar {
+    private var defaultShadowImage: UIImage?
+    private var defaultBackgroundImage: UIImage?
+    private var defaultBarTintColor: UIColor?
+    
     private let newReminderButton: UIBarButtonItem = {
         let color = UIColor.systemBlue
         let highlightedColor = UIColor.systemBlue.withAlphaComponent(0.5)
@@ -27,10 +31,21 @@ class ActionsBottomView: UIToolbar {
         )
     }()
     
+    var isTransparent: Bool = false {
+        didSet {
+            if isTransparent {
+                makeTransparentBackground()
+            } else {
+                makeDefaultBackground()
+            }
+        }
+    }
+    
     init() {
         super.init(frame: .zero)
         
         setupView()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -38,18 +53,9 @@ class ActionsBottomView: UIToolbar {
     }
     
     private func setupView() {
-        setBackgroundImage(
-            UIImage(),
-            forToolbarPosition: .any,
-            barMetrics: .default
-        )
-        
-        setShadowImage(
-            UIImage(),
-            forToolbarPosition: .any
-        )
-        
-        barTintColor = .systemGray6
+        defaultBackgroundImage = backgroundImage(forToolbarPosition: .any, barMetrics: .default)
+        defaultShadowImage = shadowImage(forToolbarPosition: .any)
+        defaultBarTintColor = barTintColor
         
         setItems(
             [
@@ -58,5 +64,35 @@ class ActionsBottomView: UIToolbar {
                 addListButton
             ],
             animated: false)
+    }
+}
+
+// MARK: - Transparency Effect
+
+extension ActionsBottomView {
+    private func makeTransparentBackground() {
+        setBackgroundImage(
+            UIImage(),
+            forToolbarPosition: .any,
+            barMetrics: .default
+        )
+        setShadowImage(
+            UIImage(),
+            forToolbarPosition: .any
+        )
+        barTintColor = .systemGray6
+    }
+    
+    private func makeDefaultBackground() {
+        setBackgroundImage(
+            defaultBackgroundImage,
+            forToolbarPosition: .any,
+            barMetrics: .default
+        )
+        setShadowImage(
+            defaultShadowImage,
+            forToolbarPosition: .any
+        )
+        barTintColor = defaultBarTintColor
     }
 }
