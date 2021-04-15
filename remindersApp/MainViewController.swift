@@ -86,10 +86,6 @@ final class MainViewController: UIViewController {
         configureView()
         applyTheming()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
 }
 
 // MARK: - View configuration
