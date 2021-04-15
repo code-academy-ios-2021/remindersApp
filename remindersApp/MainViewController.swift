@@ -76,7 +76,7 @@ final class MainViewController: UIViewController {
         return tableView
     }()
     
-    private let bottomView = ActionsBottomView()
+    private lazy var bottomView = ActionsBottomView()
 
     // MARK: - Lifecycle
 
