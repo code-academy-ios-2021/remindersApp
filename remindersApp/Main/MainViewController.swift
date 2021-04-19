@@ -60,8 +60,8 @@ final class MainViewController: BaseViewController {
         return label
     }()
 
-    private lazy var myListsTableView: UITableView = {
-        let tableView = UITableView(frame: view.frame)
+    private lazy var myListsTableView: AdaptiveHeightTableView = {
+        let tableView = AdaptiveHeightTableView(frame: view.frame)
         tableView.backgroundColor = .systemGray6
         tableView.dataSource = self
         tableView.delegate = self
@@ -79,6 +79,8 @@ final class MainViewController: BaseViewController {
     }()
     
     private lazy var bottomView = ActionsBottomView()
+    private lazy var contentView = UIView()
+    private lazy var scrollView = UIScrollView()
     
     override func setupView() {
         super.setupView()
@@ -88,27 +90,42 @@ final class MainViewController: BaseViewController {
         applyTheming()
         configureNavigationBar()
         
-        view.addSubview(remindersTypeCollectionView)
-        view.addSubview(myListsLabel)
-        view.addSubview(myListsTableView)
-        view.addSubview(bottomView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        scrollView.alwaysBounceVertical = true
+        scrollView.delegate = self
         
-        additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        contentView.addSubview(remindersTypeCollectionView)
+        contentView.addSubview(myListsLabel)
+        contentView.addSubview(myListsTableView)
+        view.addSubview(bottomView)
     }
     
     override func setupConstraints() {
         super.setupConstraints()
 
-        remindersTypeCollectionView.snp.makeConstraints { make in
+        scrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(view).offset(16)
+            make.trailing.equalTo(view).inset(16)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView)
+        }
+        
+        remindersTypeCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(contentView)
             make.height.equalTo((2 * CollectionViewCellHeight) + EdgeMargin)
-            make.leading.equalTo(view.safeAreaLayoutGuide)
-            make.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(contentView)
+            make.trailing.equalTo(contentView)
         }
 
         myListsLabel.snp.makeConstraints { make in
-            make.leading.equalTo(view.safeAreaLayoutGuide)
-            make.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalTo(contentView)
+            make.trailing.equalTo(contentView)
             make.top.equalTo(remindersTypeCollectionView.snp.bottom).offset(EdgeMargin)
         }
 
@@ -116,7 +133,7 @@ final class MainViewController: BaseViewController {
             make.leading.equalTo(remindersTypeCollectionView)
             make.trailing.equalTo(remindersTypeCollectionView)
             make.top.equalTo(myListsLabel.snp.bottom).offset(EdgeMargin)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(contentView)
         }
         
         bottomView.snp.makeConstraints { make in
