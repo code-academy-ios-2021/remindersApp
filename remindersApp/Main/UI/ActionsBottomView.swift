@@ -102,8 +102,7 @@ extension ActionsBottomView {
         barTintColor = defaultBarTintColor
     }
     
-    @objc
-    private func addListPressed() {
+    @objc private func addListPressed() {
         actionsDelegate?.actionsBottomViewAddListPressed()
     }
 }

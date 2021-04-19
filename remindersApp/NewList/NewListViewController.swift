@@ -7,6 +7,16 @@ final class NewListViewController: BaseViewController {
         super.setupView()
                 
         view.addSubview(circleView)
+        
+        // Setting left bar button
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closePressed))
+        
+        // Setting title on navigation bar
+        title = "New List"
+    }
+    
+    @objc private func closePressed() {
+        dismiss(animated: true, completion: nil)
     }
     
     override func setupConstraints() {
