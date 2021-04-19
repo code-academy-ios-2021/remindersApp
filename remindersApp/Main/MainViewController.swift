@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class MainViewController: UIViewController {
+final class MainViewController: BaseViewController {
     
     // MARK: - UI constants
 
@@ -77,47 +77,23 @@ final class MainViewController: UIViewController {
     }()
     
     private lazy var bottomView = ActionsBottomView()
-
-    // MARK: - Lifecycle
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    override func setupView() {
+        super.setupView()
         
-        configureView()
         applyTheming()
-    }
-}
-
-// MARK: - View configuration
-
-private extension MainViewController {
-
-    func applyTheming() {
-        view.backgroundColor = .systemGray6
-        bottomView.isTransparent = !isTableViewBehindBottomView()
-    }
-
-    func configureView() {
         configureNavigationBar()
+        
         view.addSubview(searchBar)
         view.addSubview(remindersTypeCollectionView)
         view.addSubview(myListsLabel)
         view.addSubview(myListsTableView)
         view.addSubview(bottomView)
+    }
+    
+    override func setupConstraints() {
+        super.setupConstraints()
         
-        setupConstraints()
-    }
-
-    func configureNavigationBar() {
-        guard let navigationController = navigationController else { return }
-
-        let clearImage = UIImage()
-        navigationController.navigationBar.setBackgroundImage(clearImage, for: .default)
-        navigationController.navigationBar.shadowImage = clearImage
-        navigationItem.rightBarButtonItem = editButton
-    }
-
-    func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalTo(view).offset(EdgeMargin)
@@ -150,6 +126,25 @@ private extension MainViewController {
             make.trailing.equalTo(view)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+    }
+}
+
+// MARK: - View configuration
+
+private extension MainViewController {
+
+    func applyTheming() {
+        view.backgroundColor = .systemGray6
+        bottomView.isTransparent = !isTableViewBehindBottomView()
+    }
+
+    func configureNavigationBar() {
+        guard let navigationController = navigationController else { return }
+
+        let clearImage = UIImage()
+        navigationController.navigationBar.setBackgroundImage(clearImage, for: .default)
+        navigationController.navigationBar.shadowImage = clearImage
+        navigationItem.rightBarButtonItem = editButton
     }
 }
 

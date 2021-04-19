@@ -18,6 +18,8 @@
 		6C278437262758D800CDA601 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6C278436262758D800CDA601 /* SnapKit */; };
 		6C27843A26275A1300CDA601 /* ActionsBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C27843926275A1300CDA601 /* ActionsBottomView.swift */; };
 		6C27844326275F7400CDA601 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C27844226275F7400CDA601 /* BaseView.swift */; };
+		6CE92A54262DC6C600B6389B /* NewListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE92A53262DC6C600B6389B /* NewListViewController.swift */; };
+		6CE92A57262DC6DA00B6389B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE92A56262DC6DA00B6389B /* BaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		3293A1F626249B36004DABDE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6C27843926275A1300CDA601 /* ActionsBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsBottomView.swift; sourceTree = "<group>"; };
 		6C27844226275F7400CDA601 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
+		6CE92A53262DC6C600B6389B /* NewListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewListViewController.swift; sourceTree = "<group>"; };
+		6CE92A56262DC6DA00B6389B /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,7 +57,6 @@
 				323310D52624AA43005BA3C2 /* ReminderTypeCell.swift */,
 				322F77772625F1CB0050853A /* MyListsCell.swift */,
 				6C27843926275A1300CDA601 /* ActionsBottomView.swift */,
-				6C27844226275F7400CDA601 /* BaseView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -77,9 +80,9 @@
 		3293A1DF26249B1F004DABDE /* remindersApp */ = {
 			isa = PBXGroup;
 			children = (
-				323310CF2624AA1C005BA3C2 /* UI */,
+				6CE92A52262DC69D00B6389B /* Common */,
+				6CE92A51262DC68700B6389B /* Main */,
 				3293A1E026249B1F004DABDE /* AppDelegate.swift */,
-				3293A1F626249B36004DABDE /* MainViewController.swift */,
 				3293A1E226249B1F004DABDE /* SceneDelegate.swift */,
 				3293A1E626249B1F004DABDE /* Assets.xcassets */,
 				3293A1EB26249B1F004DABDE /* LaunchScreen.storyboard */,
@@ -95,6 +98,25 @@
 				3293A1E926249B1F004DABDE /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		6CE92A51262DC68700B6389B /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				3293A1F626249B36004DABDE /* MainViewController.swift */,
+				323310CF2624AA1C005BA3C2 /* UI */,
+				6CE92A53262DC6C600B6389B /* NewListViewController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		6CE92A52262DC69D00B6389B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				6C27844226275F7400CDA601 /* BaseView.swift */,
+				6CE92A56262DC6DA00B6389B /* BaseViewController.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,7 +198,9 @@
 				6C27843A26275A1300CDA601 /* ActionsBottomView.swift in Sources */,
 				3293A1F726249B36004DABDE /* MainViewController.swift in Sources */,
 				323310D62624AA43005BA3C2 /* ReminderTypeCell.swift in Sources */,
+				6CE92A54262DC6C600B6389B /* NewListViewController.swift in Sources */,
 				322F77782625F1CB0050853A /* MyListsCell.swift in Sources */,
+				6CE92A57262DC6DA00B6389B /* BaseViewController.swift in Sources */,
 				6C27844326275F7400CDA601 /* BaseView.swift in Sources */,
 				3293A1E126249B1F004DABDE /* AppDelegate.swift in Sources */,
 				3293A1E326249B1F004DABDE /* SceneDelegate.swift in Sources */,
