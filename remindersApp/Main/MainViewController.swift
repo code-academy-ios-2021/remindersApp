@@ -30,9 +30,11 @@ final class MainViewController: BaseViewController {
             action: nil
         )
     }()
-
+    
+    private lazy var searchController = UISearchController()
+    
     private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
+        let searchBar = searchController.searchBar
         searchBar.backgroundImage = UIImage()
         searchBar.placeholder = "Search"
         return searchBar
@@ -86,33 +88,27 @@ final class MainViewController: BaseViewController {
         applyTheming()
         configureNavigationBar()
         
-        view.addSubview(searchBar)
         view.addSubview(remindersTypeCollectionView)
         view.addSubview(myListsLabel)
         view.addSubview(myListsTableView)
         view.addSubview(bottomView)
+        
+        additionalSafeAreaInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
     
     override func setupConstraints() {
         super.setupConstraints()
-        
-        searchBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalTo(view).offset(EdgeMargin)
-            make.trailing.equalTo(view).inset(EdgeMargin)
-            make.height.equalTo(SearchBarHeight)
-        }
 
         remindersTypeCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(EdgeMargin)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo((2 * CollectionViewCellHeight) + EdgeMargin)
-            make.leading.equalTo(searchBar)
-            make.trailing.equalTo(searchBar)
+            make.leading.equalTo(view.safeAreaLayoutGuide)
+            make.trailing.equalTo(view.safeAreaLayoutGuide)
         }
 
         myListsLabel.snp.makeConstraints { make in
-            make.leading.equalTo(searchBar)
-            make.trailing.equalTo(searchBar)
+            make.leading.equalTo(view.safeAreaLayoutGuide)
+            make.trailing.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(remindersTypeCollectionView.snp.bottom).offset(EdgeMargin)
         }
 
@@ -147,6 +143,9 @@ private extension MainViewController {
         navigationController.navigationBar.setBackgroundImage(clearImage, for: .default)
         navigationController.navigationBar.shadowImage = clearImage
         navigationItem.rightBarButtonItem = editButton
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
     }
 }
 
