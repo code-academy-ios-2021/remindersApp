@@ -3,12 +3,21 @@ import UIKit
 final class NewListCircleView: BaseView {
     
     private let imageView = UIImageView(image: #imageLiteral(resourceName: "list").withTintColor(.white))
+    private lazy var gradient: CAGradientLayer = {
+        let gradient = CAGradientLayer()
+        layer.insertSublayer(gradient, at: 0)
+        return gradient
+    }()
+    
+    var color: UIColor = .systemBlue {
+        didSet {
+            configureAppearance()
+        }
+    }
         
     override func setupView() {
         super.setupView()
-        
-        backgroundColor = .systemBlue
-        
+                
         addSubview(imageView)
     }
     
@@ -25,37 +34,29 @@ final class NewListCircleView: BaseView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        configureAppearance()
+    }
+    
+    private func configureAppearance() {
         roundCorners()
-        addShadow()
-        addGradient()
+        configureShadow()
+        configureGradient()
     }
 
     private func roundCorners() {
         layer.cornerRadius = bounds.height / 2
     }
     
-    private func addShadow() {
-        layer.shadowColor = UIColor.systemBlue.cgColor
+    private func configureShadow() {
+        layer.shadowColor = color.cgColor
         layer.shadowOpacity = 0.5
         layer.shadowOffset = .zero
         layer.shadowRadius = 10
     }
     
-    private func addGradient() {
-        let gradient = CAGradientLayer()
-        
+    private func configureGradient() {
         gradient.frame = bounds
-        gradient.colors = [UIColor.black.cgColor, UIColor.red.cgColor]
+        gradient.colors = [color.withAlphaComponent(0.7).cgColor, color.cgColor]
         gradient.cornerRadius = bounds.width / 2
-        
-        gradient.startPoint = CGPoint(x: 0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1, y: 0.5)
-        
-        layer.insertSublayer(gradient, at: 0)
-    }
-    
-    private func addBorder() {
-        layer.borderColor = UIColor.black.cgColor
-        layer.borderWidth = 5.0
     }
 }

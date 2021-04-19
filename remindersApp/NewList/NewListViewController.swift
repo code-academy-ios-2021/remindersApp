@@ -1,21 +1,49 @@
 import UIKit
 
+struct NewListManager {
+    let supportedColors: [UIColor] = [.systemRed, .systemOrange, .systemYellow, .systemGreen, .systemBlue, .systemPurple, .brown]
+}
+
 final class NewListViewController: BaseViewController {
+    private let newListManager = NewListManager()
     private let circleView = NewListCircleView()
     
+    private lazy var collectionView: UICollectionView = {
+        let collectionViewLayout = UICollectionViewFlowLayout()
+        collectionViewLayout.sectionInset = .zero
+        collectionViewLayout.itemSize = CGSize(width: 44, height: 44)
+        
+        let collectionView = UICollectionView(
+            frame: view.frame,
+            collectionViewLayout: collectionViewLayout
+        )
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(ColorCircleCell.self, forCellWithReuseIdentifier: "ColorCircleCell")
+        
+        collectionView.backgroundColor = .white
+        
+        return collectionView
+    }()
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        setInitialState()
+    }
+
     override func setupView() {
         super.setupView()
-                
-        view.addSubview(circleView)
         
-        // Setting left bar button
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closePressed))
-        
-        // Setting title on navigation bar
         title = "New List"
+        configureNavigationBar()
+        
+        view.addSubview(circleView)
+        view.addSubview(collectionView)
     }
     
-    @objc private func closePressed() {
+    @objc private func cancelPressed() {
         dismiss(animated: true, completion: nil)
     }
     
@@ -25,7 +53,56 @@ final class NewListViewController: BaseViewController {
         circleView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(24)
             make.centerX.equalTo(view)
-            make.width.height.equalTo(80)
+            make.width.height.equalTo(100)
         }
+        
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(circleView.snp.bottom).offset(20)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(16)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+}
+
+extension NewListViewController {
+    private func configureNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelPressed))
+        
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+    }
+}
+
+extension NewListViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return newListManager.supportedColors.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCircleCell", for: indexPath)
+        
+        guard let colorCircleCell = cell as? ColorCircleCell else {
+            return cell
+        }
+        
+        colorCircleCell.color = newListManager.supportedColors[indexPath.row]
+        
+        return colorCircleCell
+    }
+}
+
+extension NewListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let color = newListManager.supportedColors[indexPath.row]
+        
+        circleView.color = color
+    }
+}
+
+private extension NewListViewController {
+    func setInitialState() {
+        collectionView.selectItem(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .top)
+        circleView.color = newListManager.supportedColors[0]
     }
 }

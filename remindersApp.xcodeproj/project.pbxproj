@@ -21,6 +21,7 @@
 		6CE92A54262DC6C600B6389B /* NewListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE92A53262DC6C600B6389B /* NewListViewController.swift */; };
 		6CE92A57262DC6DA00B6389B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE92A56262DC6DA00B6389B /* BaseViewController.swift */; };
 		6CE92A5D262DC86100B6389B /* NewListCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE92A5C262DC86100B6389B /* NewListCircleView.swift */; };
+		6CE92A68262DF6C900B6389B /* ColorCircleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE92A67262DF6C900B6389B /* ColorCircleCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		6CE92A53262DC6C600B6389B /* NewListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewListViewController.swift; sourceTree = "<group>"; };
 		6CE92A56262DC6DA00B6389B /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		6CE92A5C262DC86100B6389B /* NewListCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewListCircleView.swift; sourceTree = "<group>"; };
+		6CE92A67262DF6C900B6389B /* ColorCircleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCircleCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				6CE92A5C262DC86100B6389B /* NewListCircleView.swift */,
+				6CE92A67262DF6C900B6389B /* ColorCircleCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 				6C27843A26275A1300CDA601 /* ActionsBottomView.swift in Sources */,
 				3293A1F726249B36004DABDE /* MainViewController.swift in Sources */,
 				323310D62624AA43005BA3C2 /* ReminderTypeCell.swift in Sources */,
+				6CE92A68262DF6C900B6389B /* ColorCircleCell.swift in Sources */,
 				6CE92A5D262DC86100B6389B /* NewListCircleView.swift in Sources */,
 				6CE92A54262DC6C600B6389B /* NewListViewController.swift in Sources */,
 				322F77782625F1CB0050853A /* MyListsCell.swift in Sources */,
