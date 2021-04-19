@@ -81,6 +81,8 @@ final class MainViewController: BaseViewController {
     override func setupView() {
         super.setupView()
         
+        bottomView.actionsDelegate = self
+        
         applyTheming()
         configureNavigationBar()
         
@@ -216,5 +218,14 @@ extension MainViewController {
                 
         // 3. Palyginti bottom view poziciją su table view cell pozicija
         return bottomView.frame.intersects(cellFrameInMainView)
+    }
+}
+
+extension MainViewController: ActionsBottomViewDelegate {
+    func actionsBottomViewAddListPressed() {
+        let newListViewController = NewListViewController()
+        let navigationController = UINavigationController(rootViewController: newListViewController)
+        
+        present(navigationController, animated: true, completion: nil)
     }
 }

@@ -1,9 +1,15 @@
 import UIKit
 
+protocol ActionsBottomViewDelegate: AnyObject {
+    func actionsBottomViewAddListPressed()
+}
+
 class ActionsBottomView: UIToolbar {
     private var defaultShadowImage: UIImage?
     private var defaultBackgroundImage: UIImage?
     private var defaultBarTintColor: UIColor?
+    
+    weak var actionsDelegate: ActionsBottomViewDelegate?
     
     private let newReminderButton: UIBarButtonItem = {
         let color = UIColor.systemBlue
@@ -26,8 +32,8 @@ class ActionsBottomView: UIToolbar {
         return UIBarButtonItem(
             title: "Add List",
             style: .plain,
-            target: nil,
-            action: nil
+            target: self,
+            action: #selector(addListPressed)
         )
     }()
     
@@ -94,5 +100,10 @@ extension ActionsBottomView {
             forToolbarPosition: .any
         )
         barTintColor = defaultBarTintColor
+    }
+    
+    @objc
+    private func addListPressed() {
+        actionsDelegate?.actionsBottomViewAddListPressed()
     }
 }
