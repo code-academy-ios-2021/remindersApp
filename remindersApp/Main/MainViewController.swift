@@ -31,8 +31,10 @@ final class MainViewController: BaseViewController {
         )
     }()
 
+    private lazy var searchController = UISearchController()
+    
     private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
+        let searchBar = searchController.searchBar
         searchBar.backgroundImage = UIImage()
         searchBar.placeholder = "Search"
         return searchBar
@@ -94,9 +96,7 @@ final class MainViewController: BaseViewController {
         applyTheming()
         configureNavigationBar()
         configureScrollView()
-        
-        view.addSubview(searchBar)
-        
+                
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(remindersTypeCollectionView)
@@ -108,15 +108,8 @@ final class MainViewController: BaseViewController {
     override func setupConstraints() {
         super.setupConstraints()
         
-        searchBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalTo(view).offset(EdgeMargin)
-            make.trailing.equalTo(view).inset(EdgeMargin)
-            make.height.equalTo(SearchBarHeight)
-        }
-        
         scrollView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalTo(view).offset(EdgeMargin)
             make.trailing.equalTo(view).inset(EdgeMargin)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -171,6 +164,8 @@ private extension MainViewController {
         navigationController.navigationBar.setBackgroundImage(clearImage, for: .default)
         navigationController.navigationBar.shadowImage = clearImage
         navigationItem.rightBarButtonItem = editButton
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
     }
     
     func configureScrollView() {
