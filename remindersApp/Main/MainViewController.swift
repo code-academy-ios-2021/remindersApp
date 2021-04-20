@@ -31,8 +31,7 @@ final class MainViewController: BaseViewController {
         )
     }()
 
-    private lazy var searchController = UISearchController()
-    
+    private let searchController = UISearchController()
     private lazy var searchBar: UISearchBar = {
         let searchBar = searchController.searchBar
         searchBar.backgroundImage = UIImage()
@@ -53,7 +52,7 @@ final class MainViewController: BaseViewController {
         return collectionView
     }()
 
-    private lazy var myListsLabel: UILabel = {
+    private let myListsLabel: UILabel = {
         let label = UILabel()
         label.text = "My lists"
         label.font = UIFont.boldSystemFont(ofSize: 20)
@@ -78,9 +77,9 @@ final class MainViewController: BaseViewController {
         return tableView
     }()
     
-    private lazy var bottomView = ActionsBottomView()
-    private lazy var contentView = UIView()
-    private lazy var scrollView = UIScrollView()
+    private let bottomView = ActionsBottomView()
+    private let contentView = UIView()
+    private let scrollView = UIScrollView()
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -158,11 +157,6 @@ private extension MainViewController {
     }
 
     func configureNavigationBar() {
-        guard let navigationController = navigationController else { return }
-
-        let clearImage = UIImage()
-        navigationController.navigationBar.setBackgroundImage(clearImage, for: .default)
-        navigationController.navigationBar.shadowImage = clearImage
         navigationItem.rightBarButtonItem = editButton
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
