@@ -59,13 +59,13 @@ final class MainViewController: BaseViewController {
     }()
 
     private lazy var myListsTableView: UITableView = {
-        let tableView = UITableView(frame: view.frame)
+        let tableView = SelfSizingTableView(frame: view.frame)
         tableView.backgroundColor = .systemGray6
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.isScrollEnabled = false
         tableView.register(MyListsCell.self, forCellReuseIdentifier: "MyListsCell")
 
-        // Table view needs to be adaptive height for corner radius to work
         tableView.layer.cornerRadius = 8
         tableView.layer.maskedCorners = [
             .layerMinXMaxYCorner,
@@ -77,6 +77,14 @@ final class MainViewController: BaseViewController {
     }()
     
     private lazy var bottomView = ActionsBottomView()
+    private lazy var contentView = UIView()
+    private lazy var scrollView = UIScrollView()
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        bottomView.isTransparent = !isTableViewBehindBottomView()
+    }
     
     override func setupView() {
         super.setupView()
@@ -85,11 +93,15 @@ final class MainViewController: BaseViewController {
         
         applyTheming()
         configureNavigationBar()
+        configureScrollView()
         
         view.addSubview(searchBar)
-        view.addSubview(remindersTypeCollectionView)
-        view.addSubview(myListsLabel)
-        view.addSubview(myListsTableView)
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(remindersTypeCollectionView)
+        contentView.addSubview(myListsLabel)
+        contentView.addSubview(myListsTableView)
         view.addSubview(bottomView)
     }
     
@@ -102,25 +114,37 @@ final class MainViewController: BaseViewController {
             make.trailing.equalTo(view).inset(EdgeMargin)
             make.height.equalTo(SearchBarHeight)
         }
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom)
+            make.leading.equalTo(view).offset(EdgeMargin)
+            make.trailing.equalTo(view).inset(EdgeMargin)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView)
+            make.width.equalTo(scrollView) // Scrolling only vertically
+        }
 
         remindersTypeCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(EdgeMargin)
+            make.top.equalTo(contentView)
             make.height.equalTo((2 * CollectionViewCellHeight) + EdgeMargin)
-            make.leading.equalTo(searchBar)
-            make.trailing.equalTo(searchBar)
+            make.leading.equalTo(contentView)
+            make.trailing.equalTo(contentView)
         }
 
         myListsLabel.snp.makeConstraints { make in
-            make.leading.equalTo(searchBar)
-            make.trailing.equalTo(searchBar)
+            make.leading.equalTo(contentView)
+            make.trailing.equalTo(contentView)
             make.top.equalTo(remindersTypeCollectionView.snp.bottom).offset(EdgeMargin)
         }
 
         myListsTableView.snp.makeConstraints { make in
-            make.leading.equalTo(remindersTypeCollectionView)
-            make.trailing.equalTo(remindersTypeCollectionView)
+            make.leading.equalTo(contentView)
+            make.trailing.equalTo(contentView)
             make.top.equalTo(myListsLabel.snp.bottom).offset(EdgeMargin)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(contentView)
         }
         
         bottomView.snp.makeConstraints { make in
@@ -147,6 +171,12 @@ private extension MainViewController {
         navigationController.navigationBar.setBackgroundImage(clearImage, for: .default)
         navigationController.navigationBar.shadowImage = clearImage
         navigationItem.rightBarButtonItem = editButton
+    }
+    
+    func configureScrollView() {
+        scrollView.delegate = self
+        scrollView.contentInset.bottom = 64
+        scrollView.showsVerticalScrollIndicator = false
     }
 }
 
@@ -175,7 +205,7 @@ extension MainViewController: UICollectionViewDataSource {
 extension MainViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
+        10
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -217,7 +247,7 @@ extension MainViewController {
         let cellFrameInMainView = myListsTableView.convert(cellFrameInTableView, to: view)
                 
         // 3. Palyginti bottom view poziciją su table view cell pozicija
-        return bottomView.frame.intersects(cellFrameInMainView)
+        return bottomView.frame.origin.y <= cellFrameInMainView.origin.y + cellFrameInMainView.height
     }
 }
 
