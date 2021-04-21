@@ -26,6 +26,17 @@ final class NewListViewController: BaseViewController {
         
         return collectionView
     }()
+
+    private let listTitleTextField: UITextField = {
+        let textField = UITextField()
+        textField.backgroundColor = .systemGray5
+        textField.layer.cornerRadius = 8
+        textField.textAlignment = .center
+        textField.textColor = .systemBlue
+        textField.autocorrectionType = .no
+        textField.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
+        return textField
+    }()
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -41,6 +52,7 @@ final class NewListViewController: BaseViewController {
         
         view.addSubview(circleView)
         view.addSubview(collectionView)
+        view.addSubview(listTitleTextField)
     }
     
     @objc private func cancelPressed() {
@@ -55,20 +67,38 @@ final class NewListViewController: BaseViewController {
             make.centerX.equalTo(view)
             make.width.height.equalTo(100)
         }
-        
-        collectionView.snp.makeConstraints { make in
+
+        listTitleTextField.snp.makeConstraints { make in
             make.top.equalTo(circleView.snp.bottom).offset(20)
+            make.height.equalTo(50)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(16)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(16)
+        }
+
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(listTitleTextField.snp.bottom).offset(20)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(16)
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(16)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
+
     }
 }
 
 extension NewListViewController {
     private func configureNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelPressed))
-        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Cancel",
+            style: .plain,
+            target: self,
+            action: #selector(cancelPressed)
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Done",
+            style: .done,
+            target: self,
+            action: #selector(cancelPressed)
+        )
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
     }
@@ -97,12 +127,17 @@ extension NewListViewController: UICollectionViewDelegate {
         let color = newListManager.supportedColors[indexPath.row]
         
         circleView.color = color
+        listTitleTextField.textColor = color
     }
 }
 
 private extension NewListViewController {
     func setInitialState() {
         collectionView.selectItem(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .top)
-        circleView.color = newListManager.supportedColors[0]
+
+        if let firstColor = newListManager.supportedColors.first {
+            circleView.color = firstColor
+            listTitleTextField.textColor = firstColor
+        }
     }
 }
