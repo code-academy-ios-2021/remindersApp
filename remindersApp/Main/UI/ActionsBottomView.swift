@@ -2,6 +2,7 @@ import UIKit
 
 protocol ActionsBottomViewDelegate: AnyObject {
     func actionsBottomViewAddListPressed()
+    func actionsBottomViewNewReminderPressed()
 }
 
 class ActionsBottomView: UIToolbar {
@@ -24,7 +25,8 @@ class ActionsBottomView: UIToolbar {
         button.setImage(highlightedImage, for: .highlighted)
         let fontSize = button.titleLabel?.font.pointSize ?? 12
         button.titleLabel?.font = .boldSystemFont(ofSize: fontSize)
-        
+        button.addTarget(self, action: #selector(newReminderPressed), for: .touchUpInside)
+
         return UIBarButtonItem(customView: button)
     }()
     
@@ -104,5 +106,10 @@ extension ActionsBottomView {
     
     @objc private func addListPressed() {
         actionsDelegate?.actionsBottomViewAddListPressed()
+    }
+
+    @objc private func newReminderPressed() {
+        print("I WAS PRESSED")
+        actionsDelegate?.actionsBottomViewNewReminderPressed()
     }
 }

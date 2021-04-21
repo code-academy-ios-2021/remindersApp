@@ -37,10 +37,9 @@ final class NewListViewController: BaseViewController {
         textField.font = UIFont(name: "HelveticaNeue-Bold", size: 20)
         return textField
     }()
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setInitialState()
     }
 

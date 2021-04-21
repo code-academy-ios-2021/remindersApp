@@ -247,4 +247,11 @@ extension MainViewController: ActionsBottomViewDelegate {
         
         present(navigationController, animated: true, completion: nil)
     }
+
+    func actionsBottomViewNewReminderPressed() {
+        let newReminderViewController = NewReminderViewController()
+        let navigationController = UINavigationController(rootViewController: newReminderViewController)
+
+        present(navigationController, animated: true, completion: nil)
+    }
 }
