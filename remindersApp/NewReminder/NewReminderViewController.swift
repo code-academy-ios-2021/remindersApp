@@ -9,6 +9,8 @@ import UIKit
 
 final class NewReminderViewController: BaseViewController {
 
+    private var EdgeInset: CGFloat = 16
+    
     private let addBarButtonItem = UIBarButtonItem(
         title: "Add",
         style: .done,
@@ -25,6 +27,21 @@ final class NewReminderViewController: BaseViewController {
         tableView.register(NewReminderCell.self, forCellReuseIdentifier: "NewReminderCell")
         return tableView
     }()
+    
+    private let informationLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Enter information about your reminders"
+        label.textColor = .systemGray3
+        label.textAlignment = .center
+        return label
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        observeKeyboardNotifications()
+        observeTouchesOnView()
+    }
 
     override func setupView() {
         super.setupView()
@@ -32,6 +49,7 @@ final class NewReminderViewController: BaseViewController {
         view.backgroundColor = .systemGray6
         configureNavigationBar()
         view.addSubview(newReminderTableView)
+        view.addSubview(informationLabel)
     }
 
     override func setupConstraints() {
@@ -39,10 +57,35 @@ final class NewReminderViewController: BaseViewController {
 
         newReminderTableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalTo(view).offset(15)
-            make.trailing.equalTo(view).inset(15)
+            make.bottom.equalTo(informationLabel.snp.top)
+            make.leading.equalTo(view).offset(EdgeInset)
+            make.trailing.equalTo(view).inset(EdgeInset)
         }
+        
+        informationLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(EdgeInset)
+            make.centerX.equalTo(view)
+        }
+    }
+    
+    override func keyboardWillAppear(_ keyboardHeight: CGFloat) {
+        super.keyboardWillAppear(keyboardHeight)
+        
+        informationLabel.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(EdgeInset + keyboardHeight)
+        }
+        
+        UIView.animate(withDuration: 1.5, animations: view.layoutIfNeeded)
+    }
+    
+    override func keyboardWillDisappear() {
+        super.keyboardWillDisappear()
+        
+        informationLabel.snp.updateConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(EdgeInset)
+        }
+        
+        UIView.animate(withDuration: 1.5, animations: view.layoutIfNeeded)
     }
 
     private func configureNavigationBar() {
@@ -61,6 +104,14 @@ final class NewReminderViewController: BaseViewController {
 
     @objc private func cancelPressed() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    private func observeTouchesOnView() {
+        let recognizer = UITapGestureRecognizer(
+            target: view,
+            action: #selector(view.endEditing(_:))
+        )
+        view.addGestureRecognizer(recognizer)
     }
 }
 
