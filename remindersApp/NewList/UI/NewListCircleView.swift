@@ -60,3 +60,17 @@ final class NewListCircleView: BaseView {
         gradient.cornerRadius = bounds.width / 2
     }
 }
+
+#if DEBUG
+import SwiftUI
+
+struct NewListCircleView_Preview: PreviewProvider {
+    static var previews: some View {
+        ViewRepresentable {
+            let view = NewListCircleView()
+            view.color = .red
+            return view
+        }.frame(width: 100, height: 100, alignment: .center)
+    }
+}
+#endif

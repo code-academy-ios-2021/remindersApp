@@ -54,7 +54,7 @@ final class MainViewController: BaseViewController {
 
     private let myListsLabel: UILabel = {
         let label = UILabel()
-        label.text = "My lists"
+        label.text = "My list"
         label.font = UIFont.boldSystemFont(ofSize: 20)
         return label
     }()
@@ -80,6 +80,23 @@ final class MainViewController: BaseViewController {
     private let bottomView = ActionsBottomView()
     private let contentView = UIView()
     private let scrollView = UIScrollView()
+    
+    init(myListText: String = "My List") {
+        super.init(nibName: nil, bundle: nil)
+        self.myListsLabel.text = myListText
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+    @objc private func newReminderCancelled() {
+        print("New reminder cancelled")
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -255,3 +272,16 @@ extension MainViewController: ActionsBottomViewDelegate {
         present(navigationController, animated: true, completion: nil)
     }
 }
+
+
+#if DEBUG
+import SwiftUI
+
+struct MainViewController_Preview: PreviewProvider {
+    static var previews: some View {
+        ViewControllerRepresentable {
+            return MainViewController(myListText: "My list")
+        }
+    }
+}
+#endif
