@@ -94,7 +94,6 @@ final class MainViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        UNUserNotificationCenter.current().delegate = self
         UserNotificationManager.tryScheduleNotification(
             title: "Code academy!",
             body: "Welcome",

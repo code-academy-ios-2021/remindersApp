@@ -14,17 +14,18 @@ struct UserNotificationManager {
         body: String,
         after: TimeInterval
     ) {
-        
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-            if settings.authorizationStatus == .notDetermined {
-                PermissionsManager.askNotificationPermission { granted in
-                    if granted {
-                        scheduleNotification(title: title, body: body, after: after)
-                    }
-                }
-            } else if settings.authorizationStatus == .authorized {
-                scheduleNotification(title: title, body: body, after: after)
-            }
+        tryAskPermission {
+            scheduleNotification(title: title, body: body, after: after)
+        }
+    }
+    
+    static func tryScheduleNotification(
+        title: String,
+        body: String,
+        date: Date
+    ) {
+        tryAskPermission {
+            scheduleNotification(title: title, body: body, date: date)
         }
     }
     
@@ -47,5 +48,50 @@ struct UserNotificationManager {
             trigger: trigger
         )
         center.add(request)
+    }
+    
+    private static func scheduleNotification(
+        title: String,
+        body: String,
+        date: Date
+    ) {
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = UNNotificationSound.default
+        
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents(
+            [.year, .month, .day, .hour, .minute, .second],
+            from: date
+        )
+        
+        let trigger = UNCalendarNotificationTrigger(
+            dateMatching: components,
+            repeats: false
+        )
+
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+            content: content,
+            trigger: trigger
+        )
+        
+        let center = UNUserNotificationCenter.current()
+        center.add(request)
+    }
+    
+    private static func tryAskPermission(_ completion: @escaping () -> ()) {
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            if settings.authorizationStatus == .notDetermined {
+                PermissionsManager.askNotificationPermission { granted in
+                    if granted {
+                        completion()
+                    }
+                }
+            } else if settings.authorizationStatus == .authorized {
+                completion()
+            }
+        }
     }
 }

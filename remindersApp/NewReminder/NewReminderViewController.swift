@@ -10,13 +10,6 @@ import UIKit
 final class NewReminderViewController: BaseViewController {
 
     private var EdgeInset: CGFloat = 16
-    
-    private let addBarButtonItem = UIBarButtonItem(
-        title: "Add",
-        style: .done,
-        target: self,
-        action: #selector(cancelPressed)
-    )
 
     private lazy var newReminderTableView: UITableView = {
         let tableView = UITableView()
@@ -95,11 +88,22 @@ final class NewReminderViewController: BaseViewController {
             target: self,
             action: #selector(cancelPressed)
         )
-        navigationItem.rightBarButtonItem = addBarButtonItem
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Add",
+            style: .done,
+            target: self,
+            action: #selector(addPressed)
+        )
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
-
-        addBarButtonItem.isEnabled = false
+    }
+    
+    @objc private func addPressed() {
+        UserNotificationManager.tryScheduleNotification(
+            title: "Notification after 10 seconds!",
+            body: "Test",
+            date: Date(timeIntervalSinceNow: 10)
+        )
     }
 
     @objc private func cancelPressed() {
