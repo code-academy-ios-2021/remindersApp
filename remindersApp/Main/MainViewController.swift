@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import UserNotifications
 
 final class MainViewController: BaseViewController {
     
@@ -92,6 +93,13 @@ final class MainViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UNUserNotificationCenter.current().delegate = self
+        UserNotificationManager.tryScheduleNotification(
+            title: "Code academy!",
+            body: "Welcome",
+            after: 10
+        )
     }
     
     @objc private func newReminderCancelled() {
@@ -273,6 +281,20 @@ extension MainViewController: ActionsBottomViewDelegate {
     }
 }
 
+extension MainViewController: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        let content = notification.request.content
+        let alert = UIAlertController(
+            title: content.title,
+            message: content.body,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Ok", style: .default))
+        
+        present(alert, animated: true, completion: nil)
+    }
+}
 
 #if DEBUG
 import SwiftUI
