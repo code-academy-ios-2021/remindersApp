@@ -28,7 +28,9 @@ struct UserNotificationManager {
             scheduleNotification(title: title, body: body, date: date)
         }
     }
-    
+}
+
+extension UserNotificationManager {
     private static func scheduleNotification(
         title: String,
         body: String,

@@ -7,17 +7,39 @@
 
 import UIKit
 
+struct NewReminderCellModel {
+    let identifier: String
+}
+
+struct NewReminderSectionModel {
+    let cells: [NewReminderCellModel]
+}
+
 final class NewReminderViewController: BaseViewController {
+    let sections: [NewReminderSectionModel] = [
+        NewReminderSectionModel(cells: [
+            NewReminderCellModel(identifier: NewReminderTextFieldCell.reuseID),
+            NewReminderCellModel(identifier: NewReminderTextFieldCell.reuseID),
+        ]),
+        NewReminderSectionModel(cells: [
+                                    NewReminderCellModel(identifier: NewReminderDetailsCell.reuseID)]),
+        NewReminderSectionModel(cells: [
+                                    NewReminderCellModel(identifier: NewReminderListCell.reuseID)]
+        )
+    ]
 
     private var EdgeInset: CGFloat = 16
 
     private lazy var newReminderTableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = SelfSizingTableView()
         tableView.backgroundColor = .systemGray6
         tableView.rowHeight = 50
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(NewReminderCell.self, forCellReuseIdentifier: "NewReminderCell")
+        tableView.register(NewReminderTextFieldCell.self, forCellReuseIdentifier: NewReminderTextFieldCell.reuseID)
+        tableView.register(NewReminderDetailsCell.self, forCellReuseIdentifier: NewReminderDetailsCell.reuseID)
+        tableView.register(NewReminderListCell.self, forCellReuseIdentifier: NewReminderListCell.reuseID)
+
         return tableView
     }()
     
@@ -27,6 +49,16 @@ final class NewReminderViewController: BaseViewController {
         label.textColor = .systemGray3
         label.textAlignment = .center
         return label
+    }()
+    
+    private let datePicker: UIDatePicker = {
+        let picker = UIDatePicker()
+        
+        picker.datePickerMode = .dateAndTime
+        picker.preferredDatePickerStyle = .inline
+        picker.locale = Locale(identifier: "lt")
+        
+        return picker
     }()
     
     override func viewDidLoad() {
@@ -43,6 +75,7 @@ final class NewReminderViewController: BaseViewController {
         configureNavigationBar()
         view.addSubview(newReminderTableView)
         view.addSubview(informationLabel)
+        view.addSubview(datePicker)
     }
 
     override func setupConstraints() {
@@ -50,7 +83,12 @@ final class NewReminderViewController: BaseViewController {
 
         newReminderTableView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalTo(informationLabel.snp.top)
+            make.leading.equalTo(view).offset(EdgeInset)
+            make.trailing.equalTo(view).inset(EdgeInset)
+        }
+        
+        datePicker.snp.makeConstraints { make in
+            make.top.equalTo(newReminderTableView.snp.bottom)
             make.leading.equalTo(view).offset(EdgeInset)
             make.trailing.equalTo(view).inset(EdgeInset)
         }
@@ -100,10 +138,12 @@ final class NewReminderViewController: BaseViewController {
     
     @objc private func addPressed() {
         UserNotificationManager.tryScheduleNotification(
-            title: "Notification after 10 seconds!",
+            title: "Notification!",
             body: "Test",
-            date: Date(timeIntervalSinceNow: 10)
+            date: datePicker.date
         )
+        
+        dismiss(animated: true, completion: nil)
     }
 
     @objc private func cancelPressed() {
@@ -115,6 +155,7 @@ final class NewReminderViewController: BaseViewController {
             target: view,
             action: #selector(view.endEditing(_:))
         )
+        recognizer.cancelsTouchesInView = false
         view.addGestureRecognizer(recognizer)
     }
 }
@@ -122,30 +163,13 @@ final class NewReminderViewController: BaseViewController {
 extension NewReminderViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 2
-        default:
-            return 1
-        }
+        return sections[section].cells.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NewReminderCell", for: indexPath)
-
-        guard let newReminderCell = cell as? NewReminderCell else {
-            return cell
-        }
-
-        switch indexPath.section {
-        case 0:
-            newReminderCell.setupCell(type: .textField)
-        case 1:
-            newReminderCell.setupCell(type: .details)
-        case 2:
-            newReminderCell.setupCell(type: .list)
-        default:
-            fatalError("Unexpected section!")
+        let item = sections[indexPath.section].cells[indexPath.row]
+        guard let newReminderCell = tableView.dequeueReusableCell(withIdentifier: item.identifier, for: indexPath) as? BaseTableViewCell else {
+            return UITableViewCell()
         }
 
         let numberOfRowsInSection = tableView.numberOfRows(inSection: indexPath.section)
@@ -168,7 +192,7 @@ extension NewReminderViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        3
+        return sections.count
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -180,6 +204,11 @@ extension NewReminderViewController: UITableViewDataSource {
 
 extension NewReminderViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        print("Pressed")
+    }
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         20
     }
