@@ -57,6 +57,7 @@ final class NewReminderViewController: BaseViewController {
         picker.datePickerMode = .dateAndTime
         picker.preferredDatePickerStyle = .inline
         picker.locale = Locale(identifier: "lt")
+        picker.minimumDate = Date()
         
         return picker
     }()
