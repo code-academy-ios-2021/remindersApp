@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import UserNotifications
+import CoreLocation
 
 final class MainViewController: BaseViewController {
     
@@ -81,6 +82,7 @@ final class MainViewController: BaseViewController {
     private let bottomView = ActionsBottomView()
     private let contentView = UIView()
     private let scrollView = UIScrollView()
+    private let manager = CLLocationManager()
     
     init(myListText: String = "My List") {
         super.init(nibName: nil, bundle: nil)
@@ -99,6 +101,16 @@ final class MainViewController: BaseViewController {
             body: "Welcome",
             after: 10
         )
+        
+        if manager.authorizationStatus == .notDetermined {
+            manager.requestWhenInUseAuthorization()
+        } else if manager.authorizationStatus == .denied || manager.authorizationStatus == .restricted {
+            showFailedLocationAuthorizationAlert()
+        }
+        
+        manager.delegate = self
+        manager.startUpdatingLocation()
+        manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     }
     
     @objc private func newReminderCancelled() {
@@ -292,6 +304,52 @@ extension MainViewController: UNUserNotificationCenterDelegate {
         alert.addAction(UIAlertAction(title: "Ok", style: .default))
         
         present(alert, animated: true, completion: nil)
+    }
+}
+
+extension MainViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        
+        if (error as NSError).code == CLError.locationUnknown.rawValue {
+            print("Location unknown")
+        } else {
+            print(error)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last!
+        
+        if location.horizontalAccuracy < 10 {
+            // updateUI()
+            // calculateSpeed()
+            // sendToBackend()
+        }
+        
+        print("\(location)")
+    }
+}
+
+extension MainViewController {
+    private func showFailedLocationAuthorizationAlert() {
+        let alert = UIAlertController(
+            title: "Location not allowed!",
+            message: "Our application cannot work fully without location. Please enable it in settings",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "I don't care", style: .default))
+        
+        alert.addAction(UIAlertAction(title: "Grant permissions", style: .default, handler: { [unowned self] _ in
+            self.openSettings()
+        }))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func openSettings() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+        }
     }
 }
 
